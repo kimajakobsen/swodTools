@@ -1,0 +1,32 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>  
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+prefix fn: <http://www.w3.org/2005/xpath-functions#>
+
+select
+  ?l_shipmode
+  (sum (
+      xsd:integer(fn:starts-with(?o_orderpriority, "1-URGENT") ||
+      fn:starts-with(?o_orderpriority, "2-HIGH") ) ) as ?high_line_count)
+  (sum (1 -
+      xsd:integer(fn:starts-with(?o_orderpriority, "1-URGENT") ||
+      fn:starts-with(?o_orderpriority, "2-HIGH") ) ) as ?low_line_count)
+where  {
+    
+    ?li qb:dataSet ltpch:lineitemCube ;
+       ltpch:l_has_order ?ord ;
+       ltpch:l_commitdate ?l_commitdate ;
+       ltpch:l_receiptdate ?l_receiptdate ;
+       ltpch:l_shipmode ?l_shipmode ;
+       ltpch:l_shipdate ?l_shipdate .
+    ?ord ltpch:o_orderpriority ?o_orderpriority .
+    filter (?l_shipmode in ("%SHIPMODE1%", "%SHIPMODE2%") &&
+      (xsd:date(?l_commitdate) < xsd:date(?l_receiptdate)) &&
+      (xsd:date(?l_shipdate) < xsd:date(?l_commitdate)) &&
+      (xsd:date(?l_receiptdate) >= "%YEAR%-01-01"^^xsd:date) &&
+      (xsd:date(?l_receiptdate) < ("%YEAR%-01-01"^^xsd:date + "P1Y"^^xsd:duration)) )
+  }
+group by
+  ?l_shipmode
+order by
+  ?l_shipmode

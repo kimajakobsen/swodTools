@@ -1,0 +1,27 @@
+ prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select
+  ?nation
+  (sum(xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount))) as ?revenue)
+where  {
+   ?li qb:dataSet ltpch:lineitemCube ;
+       ltpch:l_has_order ?ord ;
+       ltpch:l_has_partsupplier ?ps ;
+       ltpch:l_lineextendedprice ?l_lineextendedprice ;
+       ltpch:l_linediscount ?l_linediscount .
+    ?ord ltpch:order_orderdate ?o_orderdate ;
+         ltpch:nation_name ?c_nation .
+    ?ps ltpch:nation_name ?nation ;
+        ltpch:region_name ?r_name .
+    
+    filter ((?c_nation = ?nation) &&
+      (xsd:date(?o_orderdate) >= "%YEAR%-01-01"^^xsd:date) &&
+      (xsd:date(?o_orderdate) < ("%YEAR%-01-01"^^xsd:date + "P1Y"^^xsd:duration)) &&
+      (?r_name = "%REGION%") ) 
+  }
+group by
+  ?nation
+order by
+  desc (sum(xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount))))

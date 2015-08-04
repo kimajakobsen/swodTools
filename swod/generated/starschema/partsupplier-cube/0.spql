@@ -1,0 +1,19 @@
+prefix skos:           <http://www.w3.org/2004/02/skos/core#>
+prefix qb:             <http://purl.org/linked-data/cube#>
+prefix qb4o:           <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+prefix rdfh:           <http://lod2.eu/schemas/rdfh#>
+prefix rdfh-inst:      <http://lod2.eu/schemas/rdfh-inst#>
+prefix owl:            <http://www.w3.org/2002/07/owl#>
+prefix rdf:            <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix xml:            <http://www.w3.org/XML/1998/namespace>
+prefix xsd:            <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs:           <http://www.w3.org/2000/01/rdf-schema#>
+construct 
+{
+    ?li ?p_li ?o_li .
+}
+where
+{
+    ?li qb:dataSet <http://lod2.eu/schemas/rdfh#partSupplierCube> .
+    ?li ?p_li ?o_li .
+ } 

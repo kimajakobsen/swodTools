@@ -1,0 +1,36 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+prefix fn: <http://www.w3.org/2005/xpath-functions#>
+
+
+select
+  ?cntrycode
+  (count (1) as ?numcust)
+  (sum (xsd:decimal(?c_acctbal)) as ?totacctbal)
+where {
+    ?cust ltpch:customer_acctbal ?c_acctbal ;
+      ltpch:customer_phone ?c_phone .
+      BIND (fn:substring(?c_phone,0, 3) as ?cntrycode)
+    {
+	select (avg (?acctbal2) as ?acctbal_threshold)
+	where { 
+        	select (avg (xsd:decimal(?c_acctbal2)) as ?acctbal2)
+          	where
+            	{
+              		?cust2 ltpch:customer_acctbal ?c_acctbal2 ;
+				ltpch:customer_custkey ?custkey2 ;
+		                ltpch:customer_phone ?c_phone2 .              
+			filter ((xsd:decimal(?c_acctbal2) > 0.00) &&
+                	fn:substring(?c_phone2,0, 3) in (%COUNTRY_CODE_SET%)  )
+		}
+ 		group by ?custkey2
+            }
+          }
+    filter (
+      ?cntrycode in (%COUNTRY_CODE_SET%) &&
+      (xsd:decimal(?c_acctbal) > ?acctbal_threshold ) )
+    filter not exists { ?cust ltpch:order_orderkey ?orderkey }
+  }
+group by ?cntrycode
+order by ?cntrycode

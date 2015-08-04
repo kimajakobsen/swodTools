@@ -1,0 +1,30 @@
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select
+  ?o_orderkey
+  (sum(xsd:decimal(?l_lineextendedprice)*(1 - xsd:decimal(?l_linediscount))) as ?revenue)
+  ?o_orderdate
+  ?o_shippriority
+where  {
+  ?li qb:dataSet ltpch:lineitemCube ;
+	  ltpch:l_lineextendedprice ?l_lineextendedprice ;
+    ltpch:l_linediscount ?l_linediscount ;
+    ltpch:l_shipdate ?l_shipdate ;
+    ltpch:order_order_orderdate ?o_orderdate ;
+    ltpch:order_order_shippriority ?o_shippriority ;
+    ltpch:order_order_orderkey ?o_orderkey ;
+    ltpch:order_customer_mktsegment ?c_mktsegment .
+  filter ((xsd:date(?o_orderdate) < "%DATE%"^^xsd:date) &&
+    (xsd:date(?l_shipdate) > "%DATE%"^^xsd:date) &&
+    (?c_mktsegment = "%SEGMENT%") ) 
+}
+group by
+  ?o_orderkey
+  ?o_orderdate
+  ?o_shippriority
+order by
+  desc (sum (xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount))))
+  ?o_orderdate
+limit 10

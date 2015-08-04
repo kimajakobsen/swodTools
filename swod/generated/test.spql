@@ -1,0 +1,65 @@
+prefix skos:           <http://www.w3.org/2004/02/skos/core#>
+prefix scovo:          <http://purl.org/NET/scovo#>
+prefix void:           <http://rdfs.org/ns/void#>
+prefix qb:             <http://purl.org/linked-data/cube#>
+prefix qb4o:           <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+prefix dcterms:        <http://purl.org/dc/terms/>
+prefix rdfh:           <http://lod2.eu/schemas/rdfh#>
+prefix rdfh-inst:      <http://lod2.eu/schemas/rdfh-inst#>
+prefix geonames:       <http://www.geonames.org/ontology#>
+prefix owl:            <http://www.w3.org/2002/07/owl#>
+prefix rdf:            <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix wgs:            <http://www.w3c.org/2003/01/geo/wgs84_pos#>
+prefix xml:            <http://www.w3.org/XML/1998/namespace>
+prefix xsd:            <http://www.w3.org/2001/XMLSchema#>
+prefix agri:           <http://172.25.11.87:8890/ontologies/agriculture/>
+prefix agro:           <http://aims.fao.org/aos/agrovoc/>
+prefix aowl:           <http://bblfish.net/work/atom-owl/2006-06-06/>
+prefix bus:            <http://172.25.11.87:8890/ontologies/business/>
+prefix foaf:           <http://xmlns.com/foaf/0.1/>
+prefix rdfs:           <http://www.w3.org/2000/01/rdf-schema#>
+prefix time:           <http://www.w3.org/2006/time#>
+prefix dbpcat:         <http://dbpedia.org/resource/Category:>
+prefix dbpedia:        <http://dbpedia.org/resource/>
+prefix virtrdf:        <http://www.openlinksw.com/schemas/virtrdf#>
+
+
+select 
+    *
+where
+{
+#    ?li a rdfh:lineitem .
+#    ?li ?p_li ?o_li .
+#    ?li rdfh:l_has_order ?order .
+#    ?order ?p_order ?o_order .
+#    FILTER(?p_order != rdfh:o_has_customer) .
+#    ?order rdfh:o_has_customer ?cust .
+#    ?cust ?p_cust ?o_cust .
+#    FILTER(?p_cust != rdfh:c_has_nation) .
+#    ?cust rdfh:c_has_nation ?c_nation .
+#    ?c_nation ?p_c_nation ?o_c_nation .
+#    FILTER(?p_c_nation != rdfh:n_has_region) .
+#    ?c_nation rdfh:n_has_region ?c_region .
+#    ?c_region ?p_c_region ?o_c_region .
+
+#    ?li rdfh:l_has_partsupplier ?ps .
+#    ?ps ?p_ps ?o_ps .
+#    FILTER(?p_ps != rdfh:ps_has_part && ?p_ps != rdfh:ps_has_supplier) .
+#    ?li rdfh:l_has_supplier ?c_supplier .
+#    ?supplier ?p_supplier ?o_supplier .
+#    FILTER(?p_c_supplier != rdfh:s_has_nation) .
+#    ?supplier rdfh:s_has_nation ?s_nation .
+#    ?s_nation ?p_s_nation ?o_s_nation .
+#    FILTER(?p_s_nation != rdfh:n_has_region) .
+#    ?s_nation rdfh:n_has_region ?s_region .
+#    ?s_region ?p_s_region ?o_s_region .
+#    ?li rdfh:l_has_part ?part .
+#    ?part ?p_part ?o_part .
+#
+    ?li qb:dataSet ?datacube .
+    ?datacube ?p_datacube ?o_datacube .
+    ?datacube qb:structure ?structure .
+    ?structure ?p_structure ?o_structure .
+    ?structure qb:component ?comp .
+    ?comp ?p_comp ?o_comp .
+}

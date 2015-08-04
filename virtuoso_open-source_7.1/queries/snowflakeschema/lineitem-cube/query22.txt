@@ -1,0 +1,34 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+
+
+select
+  (bif:LEFT (?c_phone, 2)) as ?cntrycode,
+  (count (1)) as ?numcust,
+  sum (xsd:decimal(?c_acctbal)) as ?totacctbal
+where {
+    ?cust a ltpch:customer ;
+      ltpch:c_acctbal ?c_acctbal ;
+      ltpch:c_phone ?c_phone .
+      {
+        select (avg (xsd:decimal(?c_acctbal2))) as ?acctbal_threshold
+          where
+            {
+              ?cust2 a ltpch:customer ;
+                 ltpch:c_acctbal ?c_acctbal2 ;
+                 ltpch:c_phone ?c_phone2 .
+              filter ((xsd:decimal(?c_acctbal2) > 0.00) &&
+                bif:LEFT (?c_phone2, 2) in (%COUNTRY_CODE_SET%) )
+            }
+
+      }
+    filter (
+      bif:LEFT (?c_phone, 2) in (%COUNTRY_CODE_SET%) &&
+      (xsd:decimal(?c_acctbal) > ?acctbal_threshold )
+    ) 
+    filter not exists { ?ord ltpch:o_has_customer ?cust }
+  }
+group by (bif:LEFT (?c_phone, 2))
+order by (bif:LEFT (?c_phone, 2))

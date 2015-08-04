@@ -1,0 +1,674 @@
+@prefix : <http://www.semanticweb.org/owl/owlapi/turtle#> .
+@prefix DB: <http://172.25.11.87:8890/schemas/DB/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix aowl: <http://bblfish.net/work/atom-owl/2006-06-06/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix virtrdf: <http://www.openlinksw.com/schemas/virtrdf#> .
+@base <http://172.25.11.87:8890/schemas/DB/> .<http://172.25.11.87:8890/schemas/DB/> rdf:type owl:Ontology .
+#################################################################
+#
+#    Datatypes
+#
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#dat.xsd:date rdf:type rdfs:Datatype .
+###  http://www.w3.org/2001/XMLSchema#dat.xsd:numeric rdf:type rdfs:Numeric .
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+###  http://172.25.11.87:8890/schemas/DB/containsOffer
+DB:containsOffer rdf:type owl:ObjectProperty ;                                                    
+                rdfs:label "contains offer"@en ;               
+                rdfs:range DB:PARTSUPP ;               
+                rdfs:domain DB:LINEITEM ;               
+                owl:inverseOf DB:partOfLineItem .
+
+###  http://172.25.11.87:8890/schemas/DB/partOfLineItem
+DB:partOfLineItem rdf:type owl:InverseFunctionalProperty ,
+                         owl:ObjectProperty ;              
+                rdfs:label "part of line item"@en ;              
+                rdfs:domain DB:PARTSUPP ;               
+                rdfs:range DB:LINEITEM .
+
+###  http://172.25.11.87:8890/schemas/DB/isPartOfOrder
+DB:isPartOfOrder rdf:type owl:ObjectProperty ;                                                    
+                rdfs:label "is part of order"@en ;               
+                rdfs:range DB:ORDERS ;               
+                rdfs:domain DB:LINEITEM ;               
+                owl:inverseOf DB:containsLineItem .
+
+###  http://172.25.11.87:8890/schemas/DB/containsLineItem
+DB:containsLineItem rdf:type owl:InverseFunctionalProperty ,
+                         owl:ObjectProperty ;              
+                rdfs:label "contains line item"@en ;              
+                rdfs:domain DB:ORDERS ;               
+                rdfs:range DB:LINEITEM .
+
+###  http://172.25.11.87:8890/schemas/DB/hasOrder
+DB:hasOrder rdf:type owl:ObjectProperty ;                                                    
+                rdfs:label "has order"@en ;               
+                rdfs:range DB:ORDERS ;               
+                rdfs:domain DB:CUSTOMER ;               
+                owl:inverseOf DB:isOrderedBy .
+
+###  http://172.25.11.87:8890/schemas/DB/isOrderedBy
+DB:isOrderedBy rdf:type owl:InverseFunctionalProperty ,
+                         owl:ObjectProperty ;              
+                rdfs:label "is ordered by"@en ;              
+                rdfs:domain DB:ORDERS ;               
+                rdfs:range DB:CUSTOMER .
+
+
+###  http://172.25.11.87:8890/schemas/DB/partOfferedBy
+DB:partOfferedBy rdf:type owl:ObjectProperty ;                                                    
+                rdfs:label "part is offered by"@en ;               
+                rdfs:range DB:PARTSUPP ;               
+                rdfs:domain DB:PART ;               
+                owl:inverseOf DB:hasPart .
+
+###  http://172.25.11.87:8890/schemas/DB/hasPart
+DB:hasPart rdf:type owl:InverseFunctionalProperty ,
+                         owl:ObjectProperty ;              
+                rdfs:label "is offered by supplier"@en ;              
+                rdfs:domain DB:PARTSUPP ;               
+                rdfs:range DB:PART .
+
+###  http://172.25.11.87:8890/schemas/DB/supplierOffer
+DB:supplierOffer rdf:type owl:ObjectProperty ;                                                    
+                rdfs:label "supplier offer"@en ;               
+                rdfs:range DB:PARTSUPP ;               
+                rdfs:domain DB:SUPPLIER ;               
+                owl:inverseOf DB:hasSupplier .
+
+###  http://172.25.11.87:8890/schemas/DB/hasSupplier
+DB:hasSupplier rdf:type owl:InverseFunctionalProperty ,
+                         owl:ObjectProperty ;              
+                rdfs:label "is offered by supplier"@en ;              
+                rdfs:domain DB:PARTSUPP ;               
+                rdfs:range DB:SUPPLIER .
+
+###  http://172.25.11.87:8890/schemas/DB/livesInNation
+DB:livesInNation rdf:type owl:ObjectProperty ;                                                    
+                rdfs:label "lives in nation"@en ;               
+                rdfs:range DB:NATION ;               
+                rdfs:domain DB:CUSTOMER ;               
+                owl:inverseOf DB:containsCustomer .
+
+###  http://172.25.11.87:8890/schemas/DB/containsCustomer
+DB:containsCustomer rdf:type owl:InverseFunctionalProperty ,
+                         owl:ObjectProperty ;              
+                rdfs:label "contains customer"@en ;              
+                rdfs:domain DB:NATION ;               
+                rdfs:range DB:CUSTOMER .
+
+###  http://172.25.11.87:8890/schemas/DB/locatedInNation
+DB:locatedInNation rdf:type owl:ObjectProperty ;                                                    
+                rdfs:label "located in nation"@en ;               
+                rdfs:range DB:NATION ;               
+                rdfs:domain DB:SUPPLIER ;               
+                owl:inverseOf DB:containsSupplier .
+
+###  http://172.25.11.87:8890/schemas/DB/containsSupplier
+DB:containsSupplier rdf:type owl:InverseFunctionalProperty ,
+                         owl:ObjectProperty ;              
+                rdfs:label "contains supplier"@en ;              
+                rdfs:domain DB:NATION ;               
+                rdfs:range DB:SUPPLIER .
+
+###  http://172.25.11.87:8890/schemas/DB/locatedInRegion
+DB:locatedInRegion rdf:type owl:ObjectProperty ;                                                    
+                rdfs:label "located in region"@en ;               
+                rdfs:range DB:REGION ;               
+                rdfs:domain DB:NATION ;               
+                owl:inverseOf DB:containsNation .
+
+###  http://172.25.11.87:8890/schemas/DB/containsNation
+DB:containsNation rdf:type owl:InverseFunctionalProperty ,
+                         owl:ObjectProperty ;              
+                rdfs:label "contains nation"@en ;              
+                rdfs:domain DB:REGION ;               
+                rdfs:range DB:NATION .
+
+
+
+
+
+
+#################################################################
+#
+#    Data properties
+#
+################################################################.
+
+###  http://172.25.11.87:8890/schemas/DB/c_acctbal
+DB:c_acctbal rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Account Balance" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:range xsd:float .
+
+###  http://172.25.11.87:8890/schemas/DB/l_discount
+DB:l_discount rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Discount" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:range xsd:float .
+
+###  http://172.25.11.87:8890/schemas/DB/l_extendedprice
+DB:l_extendedprice rdf:type owl:DatatypeProperty ;                   
+                   rdfs:label "Extended price" ;                   
+                   rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                   
+                   rdfs:range xsd:float .
+
+###  http://172.25.11.87:8890/schemas/DB/l_quantity
+DB:l_quantity rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Quantity" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:range xsd:float .
+
+###  http://172.25.11.87:8890/schemas/DB/l_tax
+DB:l_tax rdf:type owl:DatatypeProperty ;         
+         rdfs:label "Tax" ;         
+         rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;         
+         rdfs:range xsd:float .
+
+###  http://172.25.11.87:8890/schemas/DB/o_totalprice
+DB:o_totalprice rdf:type owl:DatatypeProperty ;                
+                rdfs:label "Total price" ;                
+                rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                
+                rdfs:range xsd:float .
+
+###  http://172.25.11.87:8890/schemas/DB/p_retailprice
+DB:p_retailprice rdf:type owl:DatatypeProperty ;                 
+                 rdfs:label "Retail price" ;                 
+                 rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                 
+                 rdfs:range xsd:float .
+
+###  http://172.25.11.87:8890/schemas/DB/ps_supplycost
+DB:ps_supplycost rdf:type owl:DatatypeProperty ;                 
+                 rdfs:label "Supply cost" ;                 
+                 rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                 
+                 rdfs:range xsd:float .
+
+###  http://172.25.11.87:8890/schemas/DB/s_acctbal
+DB:s_acctbal rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Account balance" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:range xsd:float .
+
+
+
+###  http://172.25.11.87:8890/schemas/DB/c_acctbal
+DB:c_acctbal rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Account Balance" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:CUSTOMER .
+
+###  http://172.25.11.87:8890/schemas/DB/c_address
+DB:c_address rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Address" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:CUSTOMER ;             
+             rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/c_comment
+DB:c_comment rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Comment" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:CUSTOMER ;             
+             rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/c_custkey
+DB:c_custkey rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Customer primary key" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:CUSTOMER ;             
+             rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/c_mktsegment
+DB:c_mktsegment rdf:type owl:DatatypeProperty ;                
+                rdfs:label "Marked segment" ;                
+                rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                
+                rdfs:domain DB:CUSTOMER ;                
+                rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/c_name
+DB:c_name rdf:type owl:DatatypeProperty ;          
+          rdfs:label "Name" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;          
+          rdfs:domain DB:CUSTOMER ;          
+          rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/c_nationkey
+DB:c_nationkey rdf:type owl:DatatypeProperty ;               
+               rdfs:label "Nation forign key" ;               
+               rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;               
+               rdfs:domain DB:CUSTOMER ;               
+               rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/c_phone
+DB:c_phone rdf:type owl:DatatypeProperty ;           
+           rdfs:label "Phone" ;           
+           rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;           
+           rdfs:domain DB:CUSTOMER ;           
+           rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/l_comment
+DB:l_comment rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Comment" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:LINEITEM ;             
+             rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/l_commitdate
+DB:l_commitdate rdf:type owl:DatatypeProperty ;                
+                rdfs:label "Commit date" ;                
+                rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                
+                rdfs:domain DB:LINEITEM ;                
+                rdfs:range xsd:date .
+
+###  http://172.25.11.87:8890/schemas/DB/l_discount
+DB:l_discount rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Discount" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:domain DB:LINEITEM .
+
+###  http://172.25.11.87:8890/schemas/DB/l_extendedprice
+DB:l_extendedprice rdf:type owl:DatatypeProperty ;                   
+                   rdfs:label "Extended price" ;                   
+                   rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                   
+                   rdfs:domain DB:LINEITEM .
+
+###  http://172.25.11.87:8890/schemas/DB/l_linenumber
+DB:l_linenumber rdf:type owl:DatatypeProperty ;                
+                rdfs:label "Line number" ;                
+                rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                
+                rdfs:domain DB:LINEITEM ;                
+                rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/l_linestatus
+DB:l_linestatus rdf:type owl:DatatypeProperty ;                
+                rdfs:label "Line status" ;                
+                rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                
+                rdfs:domain DB:LINEITEM ;                
+                rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/l_orderkey
+DB:l_orderkey rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Order forign key" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:domain DB:LINEITEM ;              
+              rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/l_partkey
+DB:l_partkey rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Part forign key" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:LINEITEM ;             
+             rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/l_quantity
+DB:l_quantity rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Quantity" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:domain DB:LINEITEM .
+
+###  http://172.25.11.87:8890/schemas/DB/l_receiptdate
+DB:l_receiptdate rdf:type owl:DatatypeProperty ;                 
+                 rdfs:label "Receipt date" ;                 
+                 rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                 
+                 rdfs:domain DB:LINEITEM ;                 
+                 rdfs:range xsd:date .
+
+###  http://172.25.11.87:8890/schemas/DB/l_returnflag
+DB:l_returnflag rdf:type owl:DatatypeProperty ;                
+                rdfs:label "Return flag" ;                
+                rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                
+                rdfs:domain DB:LINEITEM ;                
+                rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/l_shipdate
+DB:l_shipdate rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Shipping date" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:domain DB:LINEITEM ;              
+              rdfs:range xsd:date .
+
+###  http://172.25.11.87:8890/schemas/DB/l_shipinstruct
+DB:l_shipinstruct rdf:type owl:DatatypeProperty ;                  
+                  rdfs:label "Shipping instructions" ;                  
+                  rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                  
+                  rdfs:domain DB:LINEITEM ;                  
+                  rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/l_shipmode
+DB:l_shipmode rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Shopping mode" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:domain DB:LINEITEM ;              
+              rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/l_suppkey
+DB:l_suppkey rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Supply forign key" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:LINEITEM ;             
+             rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/l_tax
+DB:l_tax rdf:type owl:DatatypeProperty ;         
+         rdfs:label "Tax" ;         
+         rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;         
+         rdfs:domain DB:LINEITEM .
+
+###  http://172.25.11.87:8890/schemas/DB/n_comment
+DB:n_comment rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Comment" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:NATION ;             
+             rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/n_name
+DB:n_name rdf:type owl:DatatypeProperty ;          
+          rdfs:label "Name" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;          
+          rdfs:domain DB:NATION ;          
+          rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/n_nationkey
+DB:n_nationkey rdf:type owl:DatatypeProperty ;               
+               rdfs:label "Nation primary key" ;               
+               rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;               
+               rdfs:domain DB:NATION ;               
+               rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/n_regionkey
+DB:n_regionkey rdf:type owl:DatatypeProperty ;               
+               rdfs:label "Region forign key" ;               
+               rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;               
+               rdfs:domain DB:NATION ;               
+               rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/o_clerk
+DB:o_clerk rdf:type owl:DatatypeProperty ;           
+           rdfs:label "Clerk" ;           
+           rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;           
+           rdfs:domain DB:ORDERS ;           
+           rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/o_comment
+DB:o_comment rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Comment" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:ORDERS ;             
+             rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/o_custkey
+DB:o_custkey rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Customer forign key" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:ORDERS ;             
+             rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/o_orderdate
+DB:o_orderdate rdf:type owl:DatatypeProperty ;               
+               rdfs:label "Order date" ;               
+               rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;               
+               rdfs:domain DB:ORDERS ;               
+               rdfs:range xsd:date .
+
+###  http://172.25.11.87:8890/schemas/DB/o_orderkey
+DB:o_orderkey rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Order primary key" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:domain DB:ORDERS ;              
+              rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/o_orderpriority
+DB:o_orderpriority rdf:type owl:DatatypeProperty ;                   
+                   rdfs:label "Order priority" ;                   
+                   rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                   
+                   rdfs:domain DB:ORDERS ;                   
+                   rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/o_orderstatus
+DB:o_orderstatus rdf:type owl:DatatypeProperty ;                 
+                 rdfs:label "Order status" ;                 
+                 rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                 
+                 rdfs:domain DB:ORDERS ;                 
+                 rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/o_shippriority
+DB:o_shippriority rdf:type owl:DatatypeProperty ;                  
+                  rdfs:label "Shipping priority" ;                  
+                  rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                  
+                  rdfs:domain DB:ORDERS ;                  
+                  rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/o_totalprice
+DB:o_totalprice rdf:type owl:DatatypeProperty ;                
+                rdfs:label "Total price" ;                
+                rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                
+                rdfs:domain DB:ORDERS .
+
+###  http://172.25.11.87:8890/schemas/DB/p_brand
+DB:p_brand rdf:type owl:DatatypeProperty ;           
+           rdfs:label "Brand" ;           
+           rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;           
+           rdfs:domain DB:PART ;           
+           rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/p_comment
+DB:p_comment rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Comment" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:PART ;             
+             rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/p_container
+DB:p_container rdf:type owl:DatatypeProperty ;               
+               rdfs:label "Container" ;               
+               rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;               
+               rdfs:domain DB:PART ;               
+               rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/p_mfgr
+DB:p_mfgr rdf:type owl:DatatypeProperty ;          
+          rdfs:label "MFGR" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;          
+          rdfs:domain DB:PART ;          
+          rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/p_name
+DB:p_name rdf:type owl:DatatypeProperty ;          
+          rdfs:label "Name" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;          
+          rdfs:domain DB:PART ;          
+          rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/p_partkey
+DB:p_partkey rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Part primary key" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:PART ;             
+             rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/p_retailprice
+DB:p_retailprice rdf:type owl:DatatypeProperty ;                 
+                 rdfs:label "Retail price" ;                 
+                 rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                 
+                 rdfs:domain DB:PART .
+
+###  http://172.25.11.87:8890/schemas/DB/p_size
+DB:p_size rdf:type owl:DatatypeProperty ;          
+          rdfs:label "Size" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;          
+          rdfs:domain DB:PART ;          
+          rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/p_type
+DB:p_type rdf:type owl:DatatypeProperty ;          
+          rdfs:label "Type" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;          
+          rdfs:domain DB:PART ;          
+          rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/ps_availqty
+DB:ps_availqty rdf:type owl:DatatypeProperty ;               
+               rdfs:label "Available Quantity" ;               
+               rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;               
+               rdfs:domain DB:PARTSUPP ;               
+               rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/ps_comment
+DB:ps_comment rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Comment" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:domain DB:PARTSUPP ;              
+              rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/ps_partkey
+DB:ps_partkey rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Part key" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:domain DB:PARTSUPP ;              
+              rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/ps_suppkey
+DB:ps_suppkey rdf:type owl:DatatypeProperty ;              
+              rdfs:label "Supplier key" ;              
+              rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;              
+              rdfs:domain DB:PARTSUPP ;              
+              rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/ps_supplycost
+DB:ps_supplycost rdf:type owl:DatatypeProperty ;                 
+                 rdfs:label "Supply cost" ;                 
+                 rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;                 
+                 rdfs:domain DB:PARTSUPP .
+
+###  http://172.25.11.87:8890/schemas/DB/r_comment
+DB:r_comment rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Comment" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:REGION ;             
+             rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/r_name
+DB:r_name rdf:type owl:DatatypeProperty ;          
+          rdfs:label "Name" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;          
+          rdfs:domain DB:REGION ;          
+          rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/r_regionkey
+DB:r_regionkey rdf:type owl:DatatypeProperty ;               
+               rdfs:label "Region primary key" ;               
+               rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;               
+               rdfs:domain DB:REGION ;               
+               rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/s_acctbal
+DB:s_acctbal rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Account balance" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:SUPPLIER .
+
+###  http://172.25.11.87:8890/schemas/DB/s_address
+DB:s_address rdf:type owl:DatatypeProperty ;             
+             rdfs:label "ADDRESS" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:SUPPLIER ;             
+             rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/s_comment
+DB:s_comment rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Comment" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:SUPPLIER ;             
+             rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/s_name
+DB:s_name rdf:type owl:DatatypeProperty ;          
+          rdfs:label "Name" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;          
+          rdfs:domain DB:SUPPLIER ;          
+          rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/s_nationkey
+DB:s_nationkey rdf:type owl:DatatypeProperty ;               
+               rdfs:label "Nation forign key" ;               
+               rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;               
+               rdfs:domain DB:SUPPLIER ;               
+               rdfs:range xsd:int .
+
+###  http://172.25.11.87:8890/schemas/DB/s_phone
+DB:s_phone rdf:type owl:DatatypeProperty ;           
+           rdfs:label "Phone" ;           
+           rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;           
+           rdfs:domain DB:SUPPLIER ;           
+           rdfs:range xsd:string .
+
+###  http://172.25.11.87:8890/schemas/DB/s_suppkey
+DB:s_suppkey rdf:type owl:DatatypeProperty ;             
+             rdfs:label "Supplier key" ;             
+             rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> ;             
+             rdfs:domain DB:SUPPLIER ;             
+             rdfs:range xsd:int .
+
+
+
+#################################################################
+#
+#    Classes
+#
+################################################################.
+###  http://172.25.11.87:8890/schemas/DB/CUSTOMER
+DB:CUSTOMER rdf:type owl:Class ;            
+            rdfs:label "Customer" ;            
+            rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> .
+
+###  http://172.25.11.87:8890/schemas/DB/LINEITEM
+DB:LINEITEM rdf:type owl:Class ;            
+            rdfs:label "Lineitem" ;            
+            rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> .
+
+###  http://172.25.11.87:8890/schemas/DB/NATION
+DB:NATION rdf:type owl:Class ;          
+          rdfs:label "Nation" ;                  
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> .
+
+###  http://172.25.11.87:8890/schemas/DB/ORDERS
+DB:ORDERS rdf:type owl:Class ;          
+          rdfs:label "Order" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> .
+
+###  http://172.25.11.87:8890/schemas/DB/PART
+DB:PART rdf:type owl:Class ;        
+        rdfs:label "Part" ;        
+        rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> .
+
+###  http://172.25.11.87:8890/schemas/DB/PARTSUPP
+DB:PARTSUPP rdf:type owl:Class ;            
+            rdfs:label "Offer" ;            
+            rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> .
+
+###  http://172.25.11.87:8890/schemas/DB/REGION
+DB:REGION rdf:type owl:Class ;          
+          rdfs:label "Region" ;          
+          rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> .
+
+###  http://172.25.11.87:8890/schemas/DB/SUPPLIER
+DB:SUPPLIER rdf:type owl:Class ;            
+            rdfs:label "Supplier" ;            
+            rdfs:isDefinedBy <http://172.25.11.87:8890/schemas/DB/> .
+
+###  http://www.w3.org/2001/XMLSchema#numeri.xsd:float rdf:type owl:Class .
+
+
+###  Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.ne.

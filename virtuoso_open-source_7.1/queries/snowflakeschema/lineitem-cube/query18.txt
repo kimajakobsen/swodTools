@@ -1,0 +1,43 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>  
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select
+   ?c_name
+   ?c_custkey
+   ?o_orderkey
+   ?o_orderdate
+   ?o_ordertotalprice
+   (sum(xsd:decimal(?l_linequantity)) as ?l_quantity)
+where {
+    ?li qb:dataSet ltpch:lineitemCube  ;
+        ltpch:l_linequantity ?l_linequantity ;
+        ltpch:l_has_order ?ord .
+    ?ord ltpch:o_orderkey ?o_orderkey ;
+         ltpch:o_orderdate ?o_orderdate ;
+         ltpch:o_ordertotalprice ?o_ordertotalprice ;
+         ltpch:o_has_customer ?cust .
+    ?cust ltpch:c_custkey ?c_custkey ;
+          ltpch:c_name ?c_name .  
+    { select 
+         ?sum_order 
+         (sum (xsd:decimal(?l2_linequantity)) as ?sum_q)
+       where {
+           ?li2 qb:dataSet ltpch:lineitemCube ;
+                ltpch:l_linequantity ?l2_linequantity ;
+                ltpch:l_has_order ?sum_order .
+       }
+       group by ?sum_order 
+    } .
+    filter (?sum_order = ?ord && xsd:decimal(?sum_q) > xsd:decimal(%QUANTITY%))
+}
+group by
+   ?c_name
+   ?c_custkey
+   ?o_orderkey
+   ?o_orderdate
+   ?o_ordertotalprice
+order by
+  desc (?o_ordertotalprice)
+  ?o_orderdate
+limit 100

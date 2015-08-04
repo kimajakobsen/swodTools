@@ -1,0 +1,30 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select
+  ?c_count
+  (count(1) as ?custdist)
+where {
+    { select
+        ?c_custkey
+        (count (?ord) as ?c_count)
+      where
+        {
+          ?cust ltpch:c_custkey ?c_custkey .
+           optional {
+             ?ord a ltpch:orders ;
+                  ltpch:o_has_customer ?cust ;
+                  ltpch:o_comment ?o_comment .
+              filter (!( REGEX (?o_comment , "%WORD1%.*%WORD2%" ) ) ) . 
+          }
+        }
+      group by 
+        ?c_custkey
+    }
+  }
+group by
+  ?c_count
+order by
+  desc (count(1))
+  desc (?c_count)

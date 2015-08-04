@@ -1,0 +1,40 @@
+ prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select 
+  ?supp_nation 
+  ?cust_nation 
+  ?li_year
+  (sum (xsd:decimal(?volume)) as ?revenue)
+where {
+  {
+    select
+      ?supp_nation
+      ?cust_nation
+      ?li_year
+      ((xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount))) as ?volume)
+    where {
+      ?li qb:dataSet ltpch:lineitemCube ;
+        ltpch:l_shipdate ?l_shipdate ;
+        ltpch:l_lineextendedprice ?l_lineextendedprice ;
+        ltpch:l_linediscount ?l_linediscount ;
+        ltpch:order_nation_name ?cust_nation ;
+        ltpch:partsupplier_nation_name ?supp_nation .
+      BIND (SUBSTR(STR(?l_shipdate), 1,4) as ?li_year)
+filter (xsd:boolean(
+        (?cust_nation = "%NATION1%" && ?supp_nation = "%NATION2%") ||
+        (?cust_nation = "%NATION2%" && ?supp_nation = "%NATION1%") ) &&
+        xsd:boolean(xsd:date(?l_shipdate) >= xsd:date("1995-01-01"^^xsd:date)) &&
+        xsd:boolean(xsd:date(?l_shipdate) <= xsd:date("1996-12-31"^^xsd:date)) ) 
+      } 
+   } 
+}
+group by
+  ?supp_nation
+  ?cust_nation
+  ?li_year
+order by
+  ?supp_nation
+  ?cust_nation
+  ?li_year

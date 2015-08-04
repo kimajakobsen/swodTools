@@ -1,0 +1,531 @@
+@prefix skos:           <http://www.w3.org/2004/02/skos/core#> .
+@prefix scovo:          <http://purl.org/NET/scovo#> .
+@prefix void:           <http://rdfs.org/ns/void#> .
+@prefix qb:             <http://purl.org/linked-data/cube#> .
+@prefix qb4o:           <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_> .
+@prefix dcterms:        <http://purl.org/dc/terms/> .
+@prefix ltpch:          <http://extbi.lab.aau.dk/ontology/ltpch/> .
+@prefix ltpch-inst:     <http://extbi.lab.aau.dk/resource/ltpch/> .
+@prefix geonames:       <http://www.geonames.org/ontology#> .
+@prefix owl:            <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:            <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix wgs:            <http://www.w3c.org/2003/01/geo/wgs84_pos#> .
+@prefix xml:            <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:            <http://www.w3.org/2001/XMLSchema#> .
+@prefix agri:           <http://172.25.11.87:8890/ontologies/agriculture/> .
+@prefix agro:           <http://aims.fao.org/aos/agrovoc/> .
+@prefix aowl:           <http://bblfish.net/work/atom-owl/2006-06-06/> .
+@prefix bus:            <http://172.25.11.87:8890/ontologies/business/> .
+@prefix foaf:           <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs:           <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time:           <http://www.w3.org/2006/time#> .
+@prefix dbpcat:         <http://dbpedia.org/resource/Category:> .
+@prefix dbpedia:        <http://dbpedia.org/resource/> .
+@prefix dbpedia-owl:    <http://dbpedia.org/ontology/> .
+@prefix virtrdf:        <http://www.openlinksw.com/schemas/virtrdf#> .
+
+ltpch:customer a owl:Class ;
+  rdfs:subClassOf qb:Observation ;
+  rdf:label "Customer".
+
+ltpch:c_custkey a owl:DatatypeProperty , owl:InverseFunctionalProperty ;
+  rdfs:domain ltpch:customer ;
+  rdfs:range xsd:integer .
+
+ltpch:c_name a owl:DatatypeProperty ;
+  rdfs:domain ltpch:customer ;
+  rdfs:range xsd:string .
+
+ltpch:c_address a owl:DatatypeProperty ;
+  rdfs:domain ltpch:customer ;
+  rdfs:range xsd:string .
+
+ltpch:c_nationkey a owl:DatatypeProperty ;
+  rdfs:domain ltpch:customer ;
+  rdfs:range xsd:integer .
+
+ltpch:c_has_nation a owl:ObjectProperty ;
+  rdfs:domain ltpch:customer ;
+  rdfs:range ltpch:nation .
+
+ltpch:c_phone a owl:DatatypeProperty ;
+  rdfs:domain ltpch:customer ;
+  rdfs:range xsd:string .
+
+ltpch:c_acctbal a owl:DatatypeProperty ;
+  rdfs:domain ltpch:customer ;
+  rdfs:range xsd:decimal .
+
+ltpch:c_mktsegment a owl:DatatypeProperty ;
+  rdfs:domain ltpch:customer ;
+  rdfs:range xsd:string .
+
+ltpch:c_comment a owl:DatatypeProperty ;
+  rdfs:domain ltpch:customer ;
+  rdfs:range xsd:string .
+
+
+ltpch:lineitem a owl:Class ;
+  rdfs:subClassOf qb:Observation ;
+  rdf:label "Line Item".
+
+ltpch:l_orderkey a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:integer .
+
+ltpch:l_has_order a owl:ObjectProperty ;
+  rdfs:domain ltpch:lineitem ;
+  rdfs:range ltpch:orders .
+
+ltpch:l_partkey a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:integer .
+
+ltpch:l_has_part a owl:ObjectProperty ;
+  rdfs:domain ltpch:lineitem ;
+  rdfs:range ltpch:part .
+
+ltpch:l_suppkey a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:integer .
+
+ltpch:l_has_supplier a owl:ObjectProperty ;
+  rdfs:domain ltpch:lineitem ;
+  rdfs:range ltpch:supplier .
+
+ltpch:l_has_partsupplier a owl:ObjectProperty ;
+  rdfs:domain ltpch:lineitem ;
+  rdfs:range ltpch:partsupp .
+
+ltpch:l_linenumber a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:integer .
+
+ltpch:l_quantity a owl:DatatypeProperty ,
+                  qb:MeasureProperty    ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:decimal .
+
+ltpch:l_extendedprice a owl:DatatypeProperty ,
+                       qb:MeasureProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:decimal .
+
+ltpch:l_discount a owl:DatatypeProperty ,
+                  qb:MeasureProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:decimal .
+
+ltpch:l_tax a owl:DatatypeProperty ,
+             qb:MeasureProperty    ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:decimal .
+
+ltpch:l_returnflag a owl:DatatypeProperty ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:string .
+
+ltpch:l_linestatus a owl:DatatypeProperty ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:string .
+
+ltpch:l_shipdate a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:date .
+
+ltpch:l_commitdate a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:date .
+
+ltpch:l_receiptdate a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:date .
+
+ltpch:l_has_shipdate a owl:ObjectProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range ltpch:yearmonthday .
+
+ltpch:l_has_commitdate a owl:ObjectProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range ltpch:yearmonthday .
+
+ltpch:l_has_receiptdate a owl:ObjectProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range ltpch:yearmonthday .
+
+ltpch:l_shipinstruct a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:string .
+
+ltpch:l_shipmode a owl:DatatypeProperty ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:string .
+
+ltpch:l_comment a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:lineitem  ;
+  rdfs:range xsd:string .
+
+
+
+ltpch:nation a owl:Class ;
+  rdf:label "Nation".
+
+ltpch:n_nationkey a owl:DatatypeProperty , owl:InverseFunctionalProperty ;
+  rdfs:domain ltpch:nation  ;
+  rdfs:range xsd:integer .
+
+ltpch:n_name a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:nation  ;
+  rdfs:range xsd:string  .
+
+ltpch:n_regionkey a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:nation  ;
+  rdfs:range xsd:integer .
+
+ltpch:n_has_region a owl:ObjectProperty  ;
+  rdfs:domain ltpch:nation  ;
+  rdfs:range ltpch:region .
+
+ltpch:n_comment a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:nation  ;
+  rdfs:range xsd:string  .
+
+
+ltpch:orders a owl:Class ;
+  rdfs:subClassOf qb:Observation ;
+  rdf:label "Orders".
+
+ltpch:o_orderkey a owl:DatatypeProperty , owl:InverseFunctionalProperty ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range xsd:integer .
+
+ltpch:o_custkey a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range xsd:integer .
+
+ltpch:o_has_customer a owl:ObjectProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range ltpch:customer .
+
+ltpch:o_orderstatus a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range xsd:string  .
+
+ltpch:o_totalprice a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range xsd:decimal .
+
+ltpch:o_orderdate a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range xsd:date   .
+
+ltpch:o_has_orderdate a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range ltpch:yearmonthday   .
+
+ltpch:o_orderpriority a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range xsd:string  .
+
+ltpch:o_clerk a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range xsd:string  .
+
+ltpch:o_shippriorit a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range xsd:integer .
+
+ltpch:o_comment a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:orders  ;
+  rdfs:range xsd:string  .
+
+
+ltpch:part a owl:Class ;
+  rdf:label "Part".
+    
+ltpch:p_partkey a owl:DatatypeProperty , owl:InverseFunctionalProperty ;
+  rdfs:domain ltpch:part  ;
+  rdfs:range xsd:integer  .
+
+ltpch:p_name a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:part  ;
+  rdfs:range xsd:string  .
+
+ltpch:p_mfgr a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:part  ;
+  rdfs:range xsd:string  .
+
+ltpch:p_brand a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:part  ;
+  rdfs:range xsd:string  .
+
+ltpch:p_type a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:part  ;
+  rdfs:range xsd:string  .
+
+ltpch:p_size a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:part  ;
+  rdfs:range xsd:integer.
+
+ltpch:p_container a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:part  ;
+  rdfs:range xsd:string  .
+
+ltpch:p_retailprice a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:part  ;
+  rdfs:range xsd:decimal  .
+
+ltpch:p_comment a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:part  ;
+  rdfs:range xsd:string  .
+
+
+ltpch:partsupp a owl:Class ;
+  rdfs:subClassOf qb:Observation ;
+  rdf:label "Part-supplier".
+
+ltpch:ps_partkey a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:partsupp  ;
+  rdfs:range xsd:integer .
+
+ltpch:ps_has_part a owl:ObjectProperty  ;
+  rdfs:domain ltpch:partsupp  ;
+  rdfs:range ltpch:part .
+
+ltpch:ps_suppkey a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:partsupp  ;
+  rdfs:range xsd:integer .
+
+ltpch:ps_has_supplier a owl:ObjectProperty  ;
+  rdfs:domain ltpch:partsupp  ;
+  rdfs:range ltpch:supplier .
+
+ltpch:ps_availqty a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:partsupp  ;
+  rdfs:range xsd:integer .
+
+ltpch:ps_supplycost a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:partsupp  ;
+  rdfs:range xsd:decimal .
+
+ltpch:ps_comment a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:partsupp  ;
+  rdfs:range xsd:string .
+
+
+ltpch:region a owl:Class ;
+  rdf:label "Region".
+
+ltpch:r_regionkey a owl:DatatypeProperty , owl:InverseFunctionalProperty ;
+  rdfs:domain ltpch:region  ;
+  rdfs:range xsd:integer .
+
+ltpch:r_name a owl:DatatypeProperty ;
+  rdfs:domain ltpch:region  ;
+  rdfs:range xsd:string .
+
+ltpch:r_comment a owl:DatatypeProperty ;
+  rdfs:domain ltpch:region  ;
+  rdfs:range xsd:string .
+
+
+ltpch:supplier a owl:Class ;
+  rdf:label "Supplier".
+
+ltpch:s_suppkey a owl:DatatypeProperty , owl:InverseFunctionalProperty  ;
+  rdfs:domain ltpch:supplier  ;
+  rdfs:range xsd:integer .
+
+ltpch:s_name a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:supplier  ;
+  rdfs:range xsd:string .
+
+ltpch:s_address a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:supplier  ;
+  rdfs:range xsd:string .
+
+ltpch:s_nationkey a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:supplier  ;
+  rdfs:range xsd:integer .
+
+ltpch:s_has_nation a owl:ObjectProperty  ;
+  rdfs:domain ltpch:supplier  ;
+  rdfs:range ltpch:nation .
+
+ltpch:s_phone a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:supplier  ;
+  rdfs:range xsd:string .
+
+ltpch:s_acctbal a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:supplier  ;
+  rdfs:range xsd:decimal .
+
+ltpch:s_comment a owl:DatatypeProperty  ;
+  rdfs:domain ltpch:supplier  ;
+  rdfs:range xsd:string .
+
+
+ltpch:yearmonthday a owl:Class ;
+  rdf:label "Year-month-date" .
+
+ltpch:d_day a owl:DatatypeProperty ;
+  rdfs:domain ltpch:yearmonthday ;
+  rdfs:range xsd:integer .
+
+ltpch:d_date a owl:DatatypeProperty , owl:InverseFunctionalProperty ;
+  rdfs:domain ltpch:yearmonthday ;
+  rdfs:range xsd:date .
+
+ltpch:d_has_yearmonth a owl:ObjectProperty ;
+  rdfs:domain ltpch:yearmonthday ;
+  rdfs:range ltpch:yearmonth .
+
+
+ltpch:yearmonth a owl:Class ;
+  rdf:label "Year-month" .
+
+ltpch:m_month a owl:DatatypeProperty ;
+  rdfs:domain ltpch:yearmonth ;
+  rdfs:range xsd:integer .
+
+ltpch:m_has_year a owl:ObjectProperty ;
+  rdfs:domain ltpch:yearmonth ;
+  rdfs:range ltpch:year .
+
+
+ltpch:year a owl:Class ;
+  rdf:label "Year" .
+
+ltpch:y_year a owl:DatatypeProperty ;
+  rdfs:domain ltpch:year ;
+  rdfs:range xsd:integer .
+
+##################################################################
+# Dimensions
+##################################################################
+ltpch:ordersDim a qb:DimensionProperty .
+ltpch:partSupplierDim a qb:DimensionProperty .
+
+ltpch:l_has_order a qb4o:LevelProperty ;
+  qb4o:inDimension ltpch:ordersDim ;
+  qb4o:parentLevel ltpch:o_has_customer ;
+  qb4o:hasAttribute ltpch:o_orderkey ,
+                    ltpch:o_custkey ,
+                    ltpch:o_orderstatus ,
+                    ltpch:o_totalprice ,
+                    ltpch:o_orderdate ,
+                    ltpch:o_orderpriority ,
+                    ltpch:o_clerk ,
+                    ltpch:o_shippriorit ,
+                    ltpch:o_comment .
+
+ltpch:o_has_customer a qb4o:LevelProperty ;
+  qb4o:inDimension ltpch:ordersDim ;
+  qb4o:parentLevel ltpch:c_has_nation ;
+  qb4o:hasAttribute ltpch:c_custkey ,
+                    ltpch:c_name ,
+                    ltpch:c_address ,
+                    ltpch:c_nationkey ,
+                    ltpch:c_phone ,
+                    ltpch:c_acctbal ,
+                    ltpch:c_mktsegment ,
+                    ltpch:c_comment .
+
+ltpch:c_has_nation a qb4o:LevelProperty ;
+  qb4o:inDimension ltpch:ordersDim ;
+  qb4o:parentLevel ltpch:n_has_region ;
+  qb4o:hasAttribute ltpch:n_nationkey ,
+                    ltpch:n_name ,
+                    ltpch:n_regionkey ,
+                    ltpch:n_comment .
+
+ltpch:s_has_nation a qb4o:LevelProperty ;
+  qb4o:inDimension ltpch:partSupplierDim ;
+  qb4o:parentLevel ltpch:n_has_region ;
+  qb4o:hasAttribute ltpch:n_nationkey ,
+                    ltpch:n_name ,
+                    ltpch:n_regionkey ,
+                    ltpch:n_comment .
+
+ltpch:n_has_region a qb4o:LevelProperty ;
+  qb4o:inDimension ltpch:ordersDim ,
+                   ltpch:partSupplierDim ; 
+  qb4o:hasAttribute ltpch:r_regionkey ,
+                    ltpch:r_name ,
+                    ltpch:r_comment .
+
+ltpch:l_has_partsupplier a qb4o:LevelProperty ;
+  qb4o:inDimension ltpch:partSupplierDim ;
+  qb4o:parentLevel ltpch:ps_has_part ,
+                   ltpch:ps_has_supplier ;
+  qb4o:hasAttribute ltpch:ps_partkey ,
+                    ltpch:ps_suppkey ,
+                    ltpch:ps_availqty ,
+                    ltpch:ps_supplycost ,
+                    ltpch:ps_comment .
+
+ltpch:ps_has_part a qb4o:LevelProperty ;
+  qb4o:inDimension ltpch:partSupplierDim ;
+  qb4o:hasAttribute ltpch:p_partkey ,
+                    ltpch:p_name ,
+                    ltpch:p_mfgr ,
+                    ltpch:p_brand ,
+                    ltpch:p_type ,
+                    ltpch:p_size ,
+                    ltpch:p_container ,
+                    ltpch:p_retailprice ,
+                    ltpch:p_comment .
+
+ltpch:ps_has_supplier a qb4o:LevelProperty ;
+  qb4o:inDimension ltpch:partSupplierDim ;
+  qb4o:parentLevel ltpch:s_has_nation ;
+  qb4o:hasAttribute ltpch:s_suppkey ,
+                    ltpch:s_name ,
+                    ltpch:s_address ,
+                    ltpch:s_nationkey ,
+                    ltpch:s_phone ,
+                    ltpch:s_acctbal ,
+                    ltpch:s_comment .
+
+##################################################################
+# Line Item Data Cube
+##################################################################
+ltpch:lineitemStructure a qb:DataStructureDefinition ;
+  qb:component [ qb4o:level ltpch:l_has_order ; qb:order 1 ] ;
+  qb:component [ qb4o:level ltpch:l_has_partsupplier ; qb:order 2 ] ;
+  qb:component [ qb:measure ltpch:l_quantity ; qb:hasAggregateFunction qb4o:sum ] ;
+  qb:component [ qb:measure ltpch:l_extendedprice ; 
+                 qb4o:hasAggregateFunction qb4o:sum ] ;
+  qb:component [ qb:measure ltpch:l_discount ; qb4o:hasAggregateFunction qb4o:avg ] ;
+  qb:component [ qb:measure ltpch:l_tax ; qb4o:hasAggregateFunction qb4o:avg ] .
+
+ltpch:lineitemCube a qb:DataSet ;
+  qb:structure ltpch:lineitemStructure ;
+  rdf:label "Lineitem Cube" .
+
+##################################################################
+# Part Supplier Data Cube
+##################################################################
+ltpch:partSupplierStructure a qb:DataStructureDefinition ;
+  qb:component [ qb4o:level ltpch:ps_has_part ; qb:order 1 ] ;
+  qb:component [ qb4o:level ltpch:ps_has_supplier ; qb:order 2 ] ;
+  qb:component [ qb:measure ltpch:ps_availqty ; 
+                 qb4o:hasAggregateFunction qb4o:sum ] ;
+  qb:component [ qb:measure ltpch:sp_supplycost ; 
+                 qb4o:hasAggregateFunction qb4o:sum ] .
+
+ltpch:partSupplierCube a qb:DataSet ;
+  qb:structure ltpch:partSupplierStructure ;
+  rdf:label "Part Supplier Cube" .
+
+##################################################################
+# Orders Data Cube
+##################################################################
+ltpch:ordersStructure a qb:DataStructureDefinition ;
+  qb:component [ qb4o:level ltpch:o_has_customer ; qb:order 1 ] ;
+  qb:component [ qb:measure ltpch:o_totalprice ; 
+                 qb4o:hasAggregateFunction qb4o:sum ] .
+
+ltpch:ordersCube a qb:DataSet ;
+  qb:structure ltpch:ordersStructure ;
+  rdf:label "Orders Cube" .

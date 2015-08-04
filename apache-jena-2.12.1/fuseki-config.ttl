@@ -1,0 +1,215 @@
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+
+[] ja:loadClass "com.hp.hpl.jena.tdb.TDB" .
+tdb:DatasetTDB  rdfs:subClassOf  ja:RDFDataset .
+tdb:GraphTDB    rdfs:subClassOf  ja:Model      .
+
+[] rdf:type fuseki:Server ;
+    fuseki:services (
+      <#service1>
+      <#service2>
+      <#service3>
+      <#service4>
+      <#service5>
+      <#service6>
+      <#service7>
+      <#service8>
+      <#service9>
+      <#service10>
+      <#service11>
+      <#service12>
+      <#service13>
+      <#service14>
+      <#service15>
+      <#service16>
+      <#service17>
+      <#service18>
+    ) .
+
+############################################################
+<#service1>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/snowflakeschema/0.1/" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalesnow0.1> ;
+     .
+
+ <#scalesnow0.1> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/snowflakeschema/0.1/" .
+
+############################################################
+<#service2>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/snowflakeschema/0.2" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalesnow0.2> ;
+     .
+
+ <#scalesnow0.2> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/snowflakeschema/0.2/" .
+
+
+############################################################
+<#service3>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/snowflakeschema/0.3" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalesnow0.3> ;
+     .
+
+ <#scalesnow0.3> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/snowflakeschema/0.3/" .
+
+############################################################
+<#service4>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/snowflakeschema/0.5" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalesnow0.5> ;
+     .
+
+ <#scalesnow0.5> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/snowflakeschema/0.5/" .
+
+############################################################
+<#service5>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/snowflakeschema/0.7" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalesnow0.7> ;
+     .
+
+ <#scalesnow0.7> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/snowflakeschema/0.7/" .
+
+############################################################
+<#service6>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/snowflakeschema/1" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalesnow1> ;
+     .
+
+ <#scalesnow1> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/snowflakeschema/1/" .
+
+############################################################
+<#service7>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/starschema/0.1/" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalestar0.1> ;
+     .
+
+ <#scalestar0.1> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/starschema/0.1/" .
+
+############################################################
+<#service8>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/starschema/0.2" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalestar0.2> ;
+     .
+
+ <#scalestar0.2> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/starschema/0.2/" .
+
+
+############################################################
+<#service9>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/starschema/0.3" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalestar0.3> ;
+     .
+
+ <#scalestar0.3> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/starschema/0.3/" .
+
+############################################################
+<#service10>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/starschema/0.5" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalestar0.5> ;
+     .
+
+ <#scalestar0.5> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/starschema/0.5/" .
+
+############################################################
+<#service11>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/starschema/0.7" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalestar0.7> ;
+     .
+
+ <#scalestar0.7> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/starschema/0.7/" .
+
+############################################################
+<#service12>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/starschema/1" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scalestar1> ;
+     .
+
+ <#scalestar1> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/starschema/1/" .
+
+############################################################
+<#service13>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/denormalizedschema/0.1/" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scaledenorm0.1> ;
+     .
+
+ <#scaledenorm0.1> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/denormalizedschema/0.1/" .
+
+############################################################
+<#service14>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/denormalizedschema/0.2" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scaledenorm0.2> ;
+     .
+
+ <#scaledenorm0.2> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/denormalizedschema/0.2/" .
+
+
+############################################################
+<#service15>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/denormalizedschema/0.3" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scaledenorm0.3> ;
+     .
+
+ <#scaledenorm0.3> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/denormalizedschema/0.3/" .
+
+############################################################
+<#service16>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/denormalizedschema/0.5" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scaledenorm0.5> ;
+     .
+
+ <#scaledenorm0.5> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/denormalizedschema/0.5/" .
+
+############################################################
+<#service17>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/denormalizedschema/0.7" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scaledenorm0.7> ;
+     .
+
+ <#scaledenorm0.7> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/denormalizedschema/0.7/" .
+
+############################################################
+<#service18>  rdf:type fuseki:Service ;
+     fuseki:name              "lineitem-cube/denormalizedschema/1" ;
+     fuseki:serviceQuery      "sparql" ;
+     fuseki:dataset           <#scaledenorm1> ;
+     .
+
+ <#scaledenorm1> rdf:type      tdb:DatasetTDB ;
+     tdb:location "/tdb/lineitem-cube/denormalizedschema/1/" .

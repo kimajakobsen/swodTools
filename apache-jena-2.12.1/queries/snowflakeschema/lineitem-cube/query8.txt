@@ -1,0 +1,50 @@
+prefix afn: <http://jena.hpl.hp.com/ARQ/function#>
+prefix fn: <http://www.w3.org/2005/xpath-functions#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select
+  ?o_year
+  ((?sum1 / ?sum2) as ?mkt_share)
+where {
+  { select
+    ?o_year
+    (sum (?volume * xsd:integer(fn:starts-with(?nation, "%NATION%"))) as ?sum1)
+    (sum (?volume) as ?sum2)
+    where {
+      { select
+           ((YEAR (xsd:date(?o_orderdate))) as ?o_year)
+           ((xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount))) as ?volume)
+           ?nation
+         where {
+           ?li qb:dataSet ltpch:lineitemCube ;
+               ltpch:l_has_partsupplier ?ps ;
+               ltpch:l_has_order ?ord ;
+               ltpch:l_has_partsupplier ?ps ;
+               ltpch:l_lineextendedprice ?l_lineextendedprice ;
+               ltpch:l_linediscount ?l_linediscount .
+           ?ps ltpch:ps_has_supplier ?s_supplier .
+           ?s_supplier ltpch:s_has_nation ?n2 .
+           ?n2 ltpch:n_name ?nation .
+           ?ps ltpch:ps_has_part ?part .
+           ?part ltpch:p_type ?type .
+           ?ord ltpch:o_orderdate ?o_orderdate ;
+             ltpch:o_has_customer ?c_customer .
+           ?c_customer ltpch:c_has_nation ?n_nation .
+           ?n_nation ltpch:n_has_region ?r_region .
+           ?r_region ltpch:r_name ?region.
+           filter ((xsd:date(?o_orderdate) >= xsd:date("1995-01-01"^^xsd:date)) &&
+             (xsd:date(?o_orderdate) <= xsd:date("1996-12-31"^^xsd:date)) &&
+              (?region = "%REGION%") &&
+              (?type = "%TYPE%") 
+           ) 
+        } 
+      } 
+    }
+    group by
+      ?o_year 
+  } 
+}
+order by
+  ?o_year

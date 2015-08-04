@@ -1,0 +1,47 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb:   <http://purl.org/linked-data/cube#>
+prefix qb4o: <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+
+select distinct
+  ?s_name
+  ?s_address
+where
+{
+  ?supp ltpch:supplier_name ?s_name ;
+        ltpch:supplier_suppkey ?suppkey ;
+        ltpch:supplier_address ?s_address .
+  { 
+    select 
+      distinct ?suppkey 
+    where 
+    {
+      ?big_ps ltpch:partsupplier_availqty ?big_ps_availqty ;
+              ltpch:supplier_suppkey ?suppkey ;
+              ltpch:nation_name ?n_name ;
+              ltpch:part_name ?p_name . 
+      filter (REGEX (?p_name , "^%COLOR%") && 
+              ?n_name = "%NATION%" && 
+              xsd:decimal(?big_ps_availqty) > ?qty_threshold)
+      {
+        select 
+          ?big_ps
+          ((0.5 * sum(xsd:decimal(?l_linequantity))) as ?qty_threshold)
+        where
+        {
+          ?li qb:dataSet ltpch:lineitemCube ;
+              ltpch:l_shipdate ?l_shipdate ;
+              ltpch:l_linequantity ?l_linequantity ;
+              ltpch:l_has_partsupplier ?big_ps .
+          filter ((xsd:date(?l_shipdate) >= xsd:date("%YEAR%-01-01"^^xsd:date)) &&
+            (xsd:date(?l_shipdate) < xsd:date("%YEAR%-01-01"^^xsd:date + "P1Y"^^xsd:duration))
+          )
+        } 
+        group by
+          ?big_ps
+      } .
+    } 
+  }
+}
+order by ?s_name
+

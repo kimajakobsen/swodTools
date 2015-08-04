@@ -1,0 +1,56 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+
+select
+  ?bigpspart,
+  ?bigpsvalue
+where {
+      { 
+        select
+          ?bigpspart,
+          sum(xsd:decimal(?b_supplycost) * xsd:decimal(?b_availqty)) as ?bigpsvalue
+        where
+          {
+            {
+              select
+                ?bigpspart,
+                ?b_supplycost,
+                ?b_availqty
+              where
+                {
+                  ?bigps ltpch:partsupplier_part_partkey ?bigpspart ;
+                        ltpch:partsupplier_partsupplier_supplycost ?b_supplycost ;
+                        ltpch:partsupplier_supplier_suppkey ?b_suppkey ;
+                        ltpch:partsupplier_partsupplier_availqty ?b_availqty ;
+                        ltpch:partsupplier_nation_name "%NATION%" .
+                }
+              group by ?bigpspart ?b_suppkey 
+            }
+          }
+      }
+    filter (?bigpsvalue > (
+        select
+          (sum(xsd:decimal(?t_supplycost) * xsd:decimal(?t_availqty)) * %FRACTION%) as ?threshold
+        where
+          {
+             {
+              select
+                ?t_partkey,
+                ?t_supplycost,
+                ?t_availqty
+              where
+                {
+                  ?thr_ps ltpch:partsupplier_partsupplier_supplycost ?t_supplycost ;
+                    ltpch:partsupplier_partsupplier_availqty ?t_availqty ;
+                    ltpch:partsupplier_nation_name "%NATION%" ;
+                    ltpch:partsupplier_supplier_suppkey ?t_suppkey ;
+                    ltpch:partsupplier_part_partkey ?t_partkey .
+                }
+              group by ?t_partkey ?t_suppkey 
+            }
+          }
+    ))
+  }
+order by
+  desc (?bigpsvalue) ?bigpspart
+

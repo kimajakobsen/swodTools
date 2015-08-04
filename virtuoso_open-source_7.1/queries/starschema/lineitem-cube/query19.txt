@@ -1,0 +1,38 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb:   <http://purl.org/linked-data/cube#>
+prefix qb4o: <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+
+select
+  ((sum(xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount)))) as ?revenue)
+where {
+    ?li qb:dataSet ltpch:lineitemCube ;
+        ltpch:l_has_partsupplier ?ps ;
+        ltpch:l_lineextendedprice ?l_lineextendedprice ;
+        ltpch:l_linediscount ?l_linediscount ;
+        ltpch:l_linequantity ?l_linequantity ;
+        ltpch:l_shipmode ?l_shipmode ;
+        ltpch:l_shipinstruct ?l_shipinstruct .
+     ?ps ltpch:part_brand ?p_brand ;
+          ltpch:part_size ?p_size ;
+          ltpch:part_container ?p_container .
+     
+
+     filter (?l_shipmode in ("AIR", "AIR REG") &&
+      ?l_shipinstruct = "DELIVER IN PERSON" &&
+      ( ( (REGEX(?p_brand,"^%BRAND1%$","i")) &&
+          (?p_container in ("SM CASE", "SM BOX", "SM PACK", "SM PKG")) &&
+          (xsd:integer(?l_linequantity) >= %QUANTITY1%) &&
+          (xsd:integer(?l_linequantity) <= %QUANTITY1% + 10) &&
+          (xsd:integer(?p_size) >= 1) && (xsd:integer(?p_size) <= 5) ) ||
+        ( (REGEX(?p_brand,"^%BRAND2%$","i")) &&
+          (?p_container in ("MED BAG", "MED BOX", "MED PKG", "MED PACK")) &&
+          (xsd:integer(?l_linequantity) >= %QUANTITY2%) && 
+          (xsd:integer(?l_linequantity) <= %QUANTITY2% + 10) &&
+          (xsd:integer(?p_size) >= 1) && (xsd:integer(?p_size) <= 10) ) ||
+        ( (REGEX(?p_brand,"^%BRAND3%$","i")) &&
+          (?p_container in ("LG CASE", "LG BOX", "LG PACK", "LG PKG")) &&
+          (xsd:integer(?l_linequantity) >= %QUANTITY3%) &&
+          (xsd:integer(?l_linequantity) <= %QUANTITY3% + 10) &&
+          (xsd:integer(?p_size) >= 1) && (xsd:integer(?p_size) <= 15) ) ) )
+  }

@@ -1,0 +1,119 @@
+prefix skos:           <http://www.w3.org/2004/02/skos/core#>
+prefix qb:             <http://purl.org/linked-data/cube#>
+prefix qb4o:           <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+prefix rdfh:           <http://lod2.eu/schemas/rdfh#>
+prefix rdfh-inst:      <http://lod2.eu/schemas/rdfh-inst#>
+prefix owl:            <http://www.w3.org/2002/07/owl#>
+prefix rdf:            <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix xml:            <http://www.w3.org/XML/1998/namespace>
+prefix xsd:            <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs:           <http://www.w3.org/2000/01/rdf-schema#>
+construct 
+{
+    ?dim ?star_predicate ?o_level ;
+         qb4o:inLevel ?inLevel .
+}
+where
+{ {select
+    ?dim ?star_predicate ?o_level ?inLevel
+where
+{
+    ?level1 qb4o:inLevel <http://lod2.eu/schemas/rdfh#ps_has_part> ;
+                    ?p_level ?o_level .
+    FILTER(   
+        ?p_level != rdf:type && 
+        ?p_level != qb:dataSet && 
+        ?p_level != skos:broader &&
+        ?p_level != qb4o:inLevel
+    ) .
+    BIND(<http://lod2.eu/schemas/rdfh#ps_has_part> as ?inLevel) .
+    BIND(URI(CONCAT("http://lod2.eu/schemas/rdfh#part_part_",REPLACE(STR(?p_level),".*[/#_]",""))) as ?star_predicate) .
+    OPTIONAL {
+       ?level0 <http://lod2.eu/schemas/rdfh#ps_has_part> ?level1.
+    }
+    OPTIONAL { BIND(?level1 as ?dim) . }
+    OPTIONAL { BIND(?level0 as ?dim) . }
+}
+
+}UNION{
+select
+    ?dim ?star_predicate ?o_level ?inLevel
+where
+{
+    ?level3 qb4o:inLevel <http://lod2.eu/schemas/rdfh#n_has_region> ;
+                    ?p_level ?o_level .
+    FILTER(   
+        ?p_level != rdf:type && 
+        ?p_level != qb:dataSet && 
+        ?p_level != skos:broader &&
+        ?p_level != qb4o:inLevel
+    ) .
+    BIND(<http://lod2.eu/schemas/rdfh#n_has_region> as ?inLevel) .
+    BIND(URI(CONCAT("http://lod2.eu/schemas/rdfh#supplier_region_",REPLACE(STR(?p_level),".*[/#_]",""))) as ?star_predicate) .
+    OPTIONAL {
+       ?level2 <http://lod2.eu/schemas/rdfh#n_has_region> ?level3.
+    OPTIONAL {
+       ?level1 <http://lod2.eu/schemas/rdfh#s_has_nation> ?level2.
+    OPTIONAL {
+       ?level0 <http://lod2.eu/schemas/rdfh#ps_has_supplier> ?level1.
+    }
+    }
+    }
+    OPTIONAL { BIND(?level3 as ?dim) . }
+    OPTIONAL { BIND(?level2 as ?dim) . }
+    OPTIONAL { BIND(?level1 as ?dim) . }
+    OPTIONAL { BIND(?level0 as ?dim) . }
+}
+
+}UNION{
+select
+    ?dim ?star_predicate ?o_level ?inLevel
+where
+{
+    ?level2 qb4o:inLevel <http://lod2.eu/schemas/rdfh#s_has_nation> ;
+                    ?p_level ?o_level .
+    FILTER(   
+        ?p_level != <http://lod2.eu/schemas/rdfh#n_has_region> &&
+        ?p_level != rdf:type && 
+        ?p_level != qb:dataSet && 
+        ?p_level != skos:broader &&
+        ?p_level != qb4o:inLevel
+    ) .
+    BIND(<http://lod2.eu/schemas/rdfh#s_has_nation> as ?inLevel) .
+    BIND(URI(CONCAT("http://lod2.eu/schemas/rdfh#supplier_nation_",REPLACE(STR(?p_level),".*[/#_]",""))) as ?star_predicate) .
+    OPTIONAL {
+       ?level1 <http://lod2.eu/schemas/rdfh#s_has_nation> ?level2.
+    OPTIONAL {
+       ?level0 <http://lod2.eu/schemas/rdfh#ps_has_supplier> ?level1.
+    }
+    }
+    OPTIONAL { BIND(?level2 as ?dim) . }
+    OPTIONAL { BIND(?level1 as ?dim) . }
+    OPTIONAL { BIND(?level0 as ?dim) . }
+}
+
+}UNION{
+select
+    ?dim ?star_predicate ?o_level ?inLevel
+where
+{
+    ?level1 qb4o:inLevel <http://lod2.eu/schemas/rdfh#ps_has_supplier> ;
+                    ?p_level ?o_level .
+    FILTER(   
+        ?p_level != <http://lod2.eu/schemas/rdfh#s_has_nation> &&
+        ?p_level != rdf:type && 
+        ?p_level != qb:dataSet && 
+        ?p_level != skos:broader &&
+        ?p_level != qb4o:inLevel
+    ) .
+    BIND(<http://lod2.eu/schemas/rdfh#ps_has_supplier> as ?inLevel) .
+    BIND(URI(CONCAT("http://lod2.eu/schemas/rdfh#supplier_supplier_",REPLACE(STR(?p_level),".*[/#_]",""))) as ?star_predicate) .
+    OPTIONAL {
+       ?level0 <http://lod2.eu/schemas/rdfh#ps_has_supplier> ?level1.
+    }
+    OPTIONAL { BIND(?level1 as ?dim) . }
+    OPTIONAL { BIND(?level0 as ?dim) . }
+}
+
+}
+ }

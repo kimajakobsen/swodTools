@@ -1,0 +1,27 @@
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select
+  ?c_count
+  (count(1) as ?custdist)
+where {
+    { select
+        ?c_custkey
+        (count (?o_comment) as ?c_count)
+      where
+        {
+          ?ord ltpch:customer_custkey ?c_custkey .
+           optional {
+             ?ord ltpch:order_comment ?o_comment .
+              filter (!( REGEX (?o_comment , "%WORD1%.*%WORD2%" ) ) ) . 
+          }
+        }
+      group by 
+        ?c_custkey
+    }
+  }
+group by
+  ?c_count
+order by
+  desc (count(1))
+  desc (?c_count)

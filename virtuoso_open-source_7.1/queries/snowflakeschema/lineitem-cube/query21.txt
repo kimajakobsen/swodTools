@@ -1,0 +1,47 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>  
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select
+    ?s_name
+    (count(1) as ?numwait)
+where {
+          ?li1 qb:dataSet ltpch:lineitemCube;
+              ltpch:l_receiptdate ?l1_receiptdate ;
+              ltpch:l_commitdate ?l1_commitdate ;
+              ltpch:l_has_partsupplier ?ps ;
+              ltpch:l_has_order ?ord .
+          ?ps ltpch:ps_has_supplier ?supp .
+          ?supp ltpch:s_name ?s_name ;
+               ltpch:s_has_nation ?s_nation .
+          ?ord ltpch:o_orderstatus ?orderstatus .
+          ?s_nation ltpch:n_name ?name
+          filter ( 
+            xsd:boolean(xsd:dateTime(?l1_receiptdate) > xsd:dateTime(?l1_commitdate)) && 
+            ?name = "%NATION%" && 
+            ?orderstatus = "F"
+            ) 
+          filter exists {
+            ?li2 ltpch:l_has_order ?ord ;
+                 ltpch:l_has_partsupplier ?ps2 .
+            ?ps2 ltpch:ps_has_supplier ?supp2 .
+            filter (?supp != ?supp2)
+          }
+          filter not exists {
+              ?li3 ltpch:l_has_order ?ord ;
+                   ltpch:l_receiptdate ?l3_receiptdate ;
+                   ltpch:l_commitdate ?l3_commitdate ;
+                   ltpch:l_has_partsupplier ?ps3 .
+              ?ps3 ltpch:ps_has_supplier ?supp3 .
+              filter (
+                 xsd:boolean(xsd:dateTime(?l3_receiptdate) > xsd:dateTime(?l3_commitdate)) &&
+                 ?supp3 != ?supp
+              )
+         }
+       }
+group by
+   ?s_name
+order by
+    desc (count(1))
+    ?s_name
+limit 100

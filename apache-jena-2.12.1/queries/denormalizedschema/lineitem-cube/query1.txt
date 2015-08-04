@@ -1,0 +1,32 @@
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+ prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select
+  ?l_returnflag 
+  ?l_linestatus 
+  (sum(xsd:decimal(?l_linequantity)) as ?sum_qty) 
+  (sum(xsd:decimal(?l_lineextendedprice)) as ?sum_base_price) 
+  (sum(xsd:decimal(?l_lineextendedprice)*(1 - xsd:decimal(?l_linediscount))) as ?sum_disc_price) 
+  (sum(xsd:decimal(?l_lineextendedprice)*(1 - xsd:decimal(?l_linediscount))*(1 + xsd:decimal(?l_linetax))) as ?sum_charge) 
+  (avg(xsd:decimal(?l_linequantity)) as ?avg_qty) 
+  (avg(xsd:decimal(?l_lineextendedprice)) as ?avg_price) 
+  (avg(xsd:decimal(?l_linediscount)) as ?avg_disc) 
+  (count(1) as ?count_order)
+where {
+    ?li qb:dataSet ltpch:lineitemCube ;
+       ltpch:l_returnflag ?l_returnflag ;
+       ltpch:l_linestatus ?l_linestatus ;
+       ltpch:l_linequantity ?l_linequantity ;
+       ltpch:l_lineextendedprice ?l_lineextendedprice ;
+       ltpch:l_linetax ?l_linetax ;
+       ltpch:l_shipdate ?l_shipdate ;
+       ltpch:l_linediscount ?l_linediscount .
+    filter (xsd:date(?l_shipdate) <= ("1998-12-01"^^xsd:date + "-P%DELTA%D"^^xsd:duration))
+} 
+group by
+  ?l_returnflag
+  ?l_linestatus
+order by
+  ?l_returnflag
+  ?l_linestatus

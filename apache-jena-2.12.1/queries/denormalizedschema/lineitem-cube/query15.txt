@@ -1,0 +1,65 @@
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb:   <http://purl.org/linked-data/cube#>
+prefix qb4o: <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+select distinct
+  ?s_suppkey
+  ?s_name
+  ?s_address
+  ?s_phone
+  ?total_revenue
+where  
+{
+  ?partsupp ltpch:partsupplier_supplier_suppkey ?s_suppkey ;
+            ltpch:partsupplier_supplier_name ?s_name ;
+            ltpch:partsupplier_supplier_address ?s_address ;
+            ltpch:partsupplier_supplier_phone ?s_phone .
+  { 
+    select
+        ?s_suppkey
+        ((sum(xsd:decimal(?l_extendedprice) * (1 - xsd:decimal(?l_discount)))) as ?total_revenue)
+    where 
+    {
+      ?li qb:dataSet ltpch:lineitemCube ;
+          ltpch:l_shipdate ?l_shipdate ;
+          ltpch:l_lineextendedprice ?l_extendedprice ;
+          ltpch:l_linediscount ?l_discount ;
+          ltpch:l_has_partsupplier ?ps ;
+          ltpch:partsupplier_supplier_suppkey ?s_suppkey .
+      filter (
+                xsd:date(?l_shipdate) >= xsd:date("%MONTH%-01"^^xsd:date) &&
+                xsd:date(?l_shipdate) < xsd:date("%MONTH%-01"^^xsd:date + "P3M"^^xsd:duration) )
+    }
+    group by
+      ?s_suppkey
+  } .
+  { 
+    select 
+      (max (?l2_total_revenue) as ?maxtotal)
+    where 
+    {
+      { 
+        select
+          ((sum(xsd:decimal(?l2_extendedprice) * (1 - xsd:decimal(?l2_discount)))) as ?l2_total_revenue)
+        where 
+        {
+          ?li2 qb:dataSet ltpch:lineitemCube ;
+              ltpch:l_shipdate ?l2_shipdate ;
+              ltpch:l_lineextendedprice ?l2_extendedprice ;
+              ltpch:l_linediscount ?l2_discount ;
+              ltpch:l_has_partsupplier ?ps2 ;
+              ltpch:partsupplier_supplier_suppkey ?s_suppkey2 .
+          filter (
+                        xsd:date(?l2_shipdate) >= xsd:date("%MONTH%-01"^^xsd:date) &&
+                        xsd:date(?l2_shipdate) < xsd:date("%MONTH%-01"^^xsd:date + "P3M"^^xsd:duration) )
+        }
+        group by
+          ?s_suppkey2
+      }
+    }
+  }
+  filter (?total_revenue = ?maxtotal)
+}
+order by
+  ?s_suppkey

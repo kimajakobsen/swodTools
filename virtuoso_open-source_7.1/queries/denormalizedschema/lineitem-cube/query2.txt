@@ -1,0 +1,41 @@
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+
+select distinct
+  ?s_acctbal,
+  ?s_name,
+  ?nation_name,
+  ?p_partkey,
+  ?p_mfgr,
+  ?s_address,
+  ?s_phone,
+  ?s_comment
+where {
+  ?ps ltpch:partsupplier_supplier_acctbal ?s_acctbal ;
+    ltpch:partsupplier_supplier_name ?s_name ;
+    ltpch:partsupplier_partsupplier_supplycost ?minsc ;    
+    ltpch:partsupplier_supplier_address ?s_address ;
+    ltpch:partsupplier_supplier_phone ?s_phone ;
+    ltpch:partsupplier_supplier_comment ?s_comment ;
+    ltpch:partsupplier_nation_name ?nation_name ;
+    ltpch:partsupplier_region_name "%REGION%" ;
+    ltpch:partsupplier_part_partkey ?p_partkey ;
+    ltpch:partsupplier_part_mfgr ?p_mfgr ;
+    ltpch:partsupplier_part_size ?size ;
+    ltpch:partsupplier_part_type ?p_type .
+FILTER (?size = str(%SIZE%) && contains(?p_type, "%TYPE%"))
+{ select ?p_partkey  min(?s_cost) as ?minsc
+    where {
+        ?ps ltpch:partsupplier_part_partkey ?p_partkey;
+            ltpch:partsupplier_partsupplier_supplycost ?s_cost ;
+            ltpch:partsupplier_region_name ?region2 .
+            filter (?region2 = "%REGION%")
+      } 
+    }
+     
+  }
+order by
+  desc (?s_acctbal)
+  ?nation_name
+  ?s_name
+  ?p_partkey
+limit 100

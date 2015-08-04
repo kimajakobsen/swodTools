@@ -1,0 +1,45 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select
+  ?c_custkey
+  ?c_companyName
+  (sum(xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount))) as ?revenue)
+  ?c_acctbal
+  ?nation
+  ?c_address
+  ?c_phone
+  ?c_comment
+where  {
+  ?li qb:dataSet ltpch:lineitemCube ;
+      ltpch:l_returnflag ?l_returnflag ;
+      ltpch:l_has_order ?ord ;
+      ltpch:l_lineextendedprice ?l_lineextendedprice ;
+      ltpch:l_linediscount ?l_linediscount .
+  ?ord ltpch:o_has_customer ?cust ;
+       ltpch:o_orderdate ?o_orderdate .
+  ?cust ltpch:c_address ?c_address ;
+      ltpch:c_phone ?c_phone ;
+      ltpch:c_comment ?c_comment ;
+      ltpch:c_acctbal ?c_acctbal ;
+      ltpch:c_custkey ?c_custkey ;
+      ltpch:c_has_nation ?c_nation ;
+      ltpch:c_name ?c_companyName .
+   ?c_nation ltpch:n_name ?nation .
+   filter ((xsd:date(?o_orderdate) >= xsd:date("%MONTH%-01"^^xsd:date)) &&
+      (xsd:date(?o_orderdate) < xsd:date("%MONTH%-01"^^xsd:date + "P3M"^^xsd:duration)) &&
+      (?l_returnflag = "R") 
+   ) 
+}
+group by
+  ?c_custkey
+  ?c_companyName
+  ?c_acctbal
+  ?nation
+  ?c_address
+  ?c_phone
+  ?c_comment
+order by
+  desc (sum(xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount))))
+limit 20

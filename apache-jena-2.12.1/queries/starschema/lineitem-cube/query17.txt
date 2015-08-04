@@ -1,0 +1,31 @@
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb:   <http://purl.org/linked-data/cube#>
+prefix qb4o: <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+select
+  ((sum(xsd:decimal(?l_lineextendedprice)) / 7.0) as ?avg_yearly)
+where {
+    ?li qb:dataSet ltpch:lineitemCube ;
+        ltpch:l_lineextendedprice ?l_lineextendedprice ;
+        ltpch:l_linequantity ?l_linequantity ;
+        ltpch:l_has_partsupplier ?ps .
+    ?ps ltpch:part_partkey ?p_partkey.
+    {
+      select 
+        ?p_partkey
+        ((0.2 * avg(xsd:decimal(?l2_linequantity))) as ?threshold)
+      where { 
+        ?li2  a ltpch:lineitem ;
+              ltpch:l_linequantity ?l2_linequantity ; 
+              ltpch:l_has_partsupplier ?ps2 .
+        ?ps2 ltpch:part_partkey ?p_partkey ;
+              ltpch:part_container ?p_container ;
+              ltpch:part_brand ?p_brand  .
+	filter (REGEX(?p_brand,"%BRAND%","i") && ?p_container = "%CONTAINER%")
+      }
+      group by
+        ?p_partkey
+    }
+    filter (xsd:decimal(?l_linequantity) < ?threshold) 
+}

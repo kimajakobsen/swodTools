@@ -1,0 +1,25 @@
+prefix qb4o: <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+prefix qb:   <http://purl.org/linked-data/cube#>
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+
+select
+  ((100 * ?sum1 / ?sum2 ) as ?promo_revenue)
+where
+{
+  select 
+    (sum (
+          bif:equ(SUBSTR(?p_type, 1, 5), "PROMO") *
+          xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount)) ) as ?sum1)
+    (sum (xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount)) ) as ?sum2)
+  where {
+      ?li qb:dataSet ltpch:lineitemCube ;
+          ltpch:l_lineextendedprice ?l_lineextendedprice ;
+          ltpch:l_linediscount ?l_linediscount ;
+          ltpch:l_shipdate ?l_shipdate ;
+          ltpch:partsupplier_part_type ?p_type .
+      filter ((xsd:dateTime(?l_shipdate) >= xsd:dateTime("%MONTH%-01"^^xsd:date)) &&
+        (xsd:dateTime(?l_shipdate) < xsd:dateTime(bif:dateadd("month", 1, "%MONTH%-01"^^xsd:date))) )
+  }
+}

@@ -1,0 +1,54 @@
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix fn: <http://www.w3.org/2005/xpath-functions#>
+
+select
+  ?s_acctbal
+  ?s_name
+  ?nation_name
+  ?p_partkey
+  ?p_mfgr
+  ?s_address
+  ?s_phone
+  ?s_comment
+where {
+  ?ps a ltpch:partsupp;
+      ltpch:ps_has_supplier ?supp;
+      ltpch:ps_has_part ?part ;
+      ltpch:ps_supplycost ?minsc .
+  ?supp a ltpch:supplier ;
+     ltpch:s_acctbal ?s_acctbal ;
+	 ltpch:s_name ?s_name ;
+     ltpch:s_has_nation ?s_has_nation ;
+     ltpch:s_address ?s_address ;
+     ltpch:s_phone ?s_phone ;
+     ltpch:s_comment ?s_comment .
+  ?s_has_nation ltpch:n_name ?nation_name ;
+     ltpch:n_has_region ?s_has_region .
+  ?s_has_region ltpch:r_name "%REGION%" .
+  ?part a ltpch:part ;
+      ltpch:p_partkey ?p_partkey ;
+      ltpch:p_mfgr ?p_mfgr ;
+      ltpch:p_size ?size ;
+      ltpch:p_type ?p_type .
+  FILTER (?size = str(%SIZE%) && fn:contains(?p_type, "%TYPE%"))
+  { select ?part (min(?s_cost) as ?minsc)
+    where {
+        ?ps a ltpch:partsupp;
+            ltpch:ps_has_part ?part;
+            ltpch:ps_has_supplier ?ms;
+            ltpch:ps_supplycost ?s_cost .
+        ?ms ltpch:s_has_nation ?m_has_nation .
+        ?m_has_nation ltpch:n_has_region ?m_has_region .
+        ?m_has_region ltpch:r_name "%REGION%" .
+      } 
+      group by ?part 
+    }
+    
+  }
+order by
+  desc (?s_acctbal)
+  ?nation_name
+  ?s_name
+  ?p_partkey
+limit 100

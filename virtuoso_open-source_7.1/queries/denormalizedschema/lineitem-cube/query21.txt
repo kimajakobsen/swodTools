@@ -1,0 +1,44 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb:   <http://purl.org/linked-data/cube#>
+prefix qb4o: <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+
+select
+    ?s_name
+    ((count(1)) as ?numwait)
+where {
+         ?li1 qb:dataSet ltpch:lineitemCube ;
+              ltpch:l_receiptdate ?l1_receiptdate ;
+              ltpch:l_commitdate ?l1_commitdate ;
+              ltpch:partsupplier_supplier_name ?s_name ;
+              ltpch:partsupplier_supplier_suppkey ?suppkey ;
+              ltpch:partsupplier_nation_name ?n_name ;
+              ltpch:order_order_orderkey ?orderkey ;
+              ltpch:order_order_orderstatus ?o_orderstatus .
+         filter ( 
+          xsd:boolean(xsd:dateTime(?l1_receiptdate) > xsd:dateTime(?l1_commitdate)) && 
+          ?n_name = "%NATION%" && 
+          ?o_orderstatus = "F"
+          )
+         filter exists {
+              ?li2 ltpch:order_order_orderkey ?orderkey ;
+                   ltpch:partsupplier_supplier_suppkey ?suppkey2 .
+              filter (?suppkey != ?suppkey2)
+         }
+         filter not exists {
+              ?li3 ltpch:order_order_orderkey ?orderkey ;
+                   ltpch:l_receiptdate ?l3_receiptdate ;
+                   ltpch:l_commitdate ?l3_commitdate ;
+                   ltpch:partsupplier_supplier_suppkey ?suppkey3 .
+              filter (
+                 xsd:boolean(xsd:dateTime(?l3_receiptdate) > xsd:dateTime(?l3_commitdate)) &&
+                 ?suppkey3 != ?suppkey
+              )
+         }
+       }
+group by
+   ?s_name
+order by
+    desc (count(1))
+    ?s_name
+limit 100

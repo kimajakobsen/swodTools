@@ -1,0 +1,34 @@
+ 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select
+  ?o_orderpriority
+  (count(*) as ?order_count)
+where  
+{
+  {
+    select distinct
+      ?o_orderpriority
+      ?ord
+    where 
+    {
+      ?li qb:dataSet ltpch:lineitemCube ;
+          ltpch:l_has_order ?ord ;
+          ltpch:l_commitdate ?l_commitdate ;
+          ltpch:l_receiptdate ?l_receiptdate .
+      ?ord ltpch:o_orderpriority ?o_orderpriority ;
+           ltpch:o_orderdate ?o_orderdate .
+      filter (
+        (xsd:boolean(xsd:dateTime(?l_commitdate) < xsd:dateTime(?l_receiptdate))) &&
+        (xsd:boolean(xsd:dateTime(?o_orderdate) >= xsd:dateTime("%MONTH%-01"^^xsd:date))) &&
+        (xsd:boolean(xsd:dateTime(?o_orderdate) < xsd:dateTime(bif:dateadd ("month", 3, "%MONTH%-01"^^xsd:date))))
+      )
+    }
+  }
+}
+group by
+  ?o_orderpriority
+order by
+  ?o_orderpriority

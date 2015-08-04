@@ -1,0 +1,32 @@
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb:   <http://purl.org/linked-data/cube#>
+prefix qb4o: <http://publishing-multidimensional-data.googlecode.com/git/index.html#ref_qbplus_>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+select
+  ?l_shipmode
+  (sum (
+      bif:__or (
+        bif:equ (?o_orderpriority, "1-URGENT"),
+        bif:equ (?o_orderpriority, "2-HIGH") ) ) as ?high_line_count)
+  (sum (1 -
+      bif:__or (
+        bif:equ (?o_orderpriority, "1-URGENT"),
+        bif:equ (?o_orderpriority, "2-HIGH") ) ) as ?low_line_count)
+where  {
+    ?li qb:dataSet ltpch:lineitemCube ;
+       ltpch:l_commitdate ?l_commitdate ;
+       ltpch:l_receiptdate ?l_receiptdate ;
+       ltpch:l_shipmode ?l_shipmode ;
+       ltpch:l_shipdate ?l_shipdate ;
+       ltpch:order_order_orderpriority ?o_orderpriority .
+    filter (xsd:boolean(?l_shipmode in ("%SHIPMODE1%", "%SHIPMODE2%")) &&
+      (xsd:boolean(xsd:dateTime(?l_commitdate) < xsd:dateTime(?l_receiptdate))) &&
+      (xsd:boolean(xsd:dateTime(?l_shipdate) < xsd:dateTime(?l_commitdate))) &&
+      (xsd:boolean(xsd:dateTime(?l_receiptdate) >= xsd:dateTime("%YEAR%-01-01"^^xsd:date))) &&
+      (xsd:boolean(xsd:dateTime(?l_receiptdate) < xsd:dateTime(bif:dateadd ("year", 1, "%YEAR%-01-01"^^xsd:date)))) )
+  }
+group by
+  ?l_shipmode
+order by
+  ?l_shipmode

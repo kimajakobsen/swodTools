@@ -1,0 +1,6 @@
+select
+  ("Timeout!" as ?timeout)
+where {
+?S ?P ?O
+} 
+limit 1

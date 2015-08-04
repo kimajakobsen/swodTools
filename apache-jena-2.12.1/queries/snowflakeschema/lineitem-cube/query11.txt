@@ -1,0 +1,40 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+
+select
+  ?bigpspart
+  ?bigpsvalue
+where {
+      { select
+          ?bigpspart
+          (sum(xsd:decimal(?b_supplycost) * xsd:decimal(?b_availqty)) as ?bigpsvalue)
+        where
+          {
+            ?bigps a ltpch:partsupp ;
+                   ltpch:ps_has_part ?bigpspart ;
+                   ltpch:ps_supplycost ?b_supplycost ;
+                   ltpch:ps_availqty ?b_availqty ;
+                   ltpch:ps_has_supplier ?b_supplier .
+            ?b_supplier ltpch:s_has_nation ?b_nation .
+            ?b_nation ltpch:n_name "%NATION%" .
+          }
+          group by ?bigpspart
+      }
+      {
+       select
+          (sum(xsd:decimal(?t_supplycost) * xsd:decimal(?t_availqty)) * %FRACTION% as ?threshold)
+        where
+          {
+            ?thr_ps a ltpch:partsupp ;
+                    ltpch:ps_supplycost ?t_supplycost ;
+                    ltpch:ps_availqty ?t_availqty ;
+                    ltpch:ps_has_supplier ?t_supplier .
+            ?t_supplier ltpch:s_has_nation ?t_nation .
+            ?t_nation ltpch:n_name "%NATION%" .
+          }
+      }
+      filter (?bigpsvalue > ?threshold )
+  }
+order by
+  desc (?bigpsvalue)
+

@@ -1,0 +1,18 @@
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix ltpch: <http://extbi.lab.aau.dk/ontology/ltpch/>
+prefix qb: <http://purl.org/linked-data/cube#>
+
+select
+  (sum(xsd:decimal(?l_lineextendedprice) * (1 - xsd:decimal(?l_linediscount))) as ?revenue)
+where {
+    ?li qb:dataSet ltpch:lineitemCube ;
+       ltpch:l_lineextendedprice ?l_lineextendedprice ;
+       ltpch:l_linediscount ?l_linediscount ;
+       ltpch:l_linequantity ?l_linequantity ;
+       ltpch:l_shipdate ?l_shipdate .
+    filter ( (xsd:dateTime(?l_shipdate) >= xsd:dateTime("%YEAR%-01-01"^^xsd:date)) &&
+      (xsd:dateTime(?l_shipdate) < xsd:dateTime(bif:dateadd ("year", 1, "%YEAR%-01-01"^^xsd:date))) &&
+      (xsd:decimal(?l_linediscount) >= %DISCOUNT% - 0.01) &&
+      (xsd:decimal(?l_linediscount) <= %DISCOUNT% + 0.01) &&
+      (xsd:decimal(?l_linequantity) < %QUANTITY%) ) 
+}
